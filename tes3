@@ -1,0 +1,161 @@
+#include <my_global.h>
+#include <mysql.h>
+#include <string.h>
+#include <stdio.h>
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);        
+}
+
+int main(int argc, char **argv)
+{      
+  MYSQL *con = mysql_init(NULL);
+  char yokoyamayui[14];
+  char hitomihonda[12];
+  char okaberin[10];
+  char sakaguchinagisa[8];
+  hitomihonda[4] = 'n';
+  sakaguchinagisa[6] = 'u';
+  yokoyamayui[2] = '7';
+  hitomihonda[6] = 's';
+  sakaguchinagisa[4] = 'i';
+  hitomihonda[2] = 'g';
+  okaberin[6] = 'a';
+  hitomihonda[8] = 'r';
+  okaberin[7] = 'm';
+  okaberin[0] = 'o';
+  sakaguchinagisa[7] = 'i';
+  yokoyamayui[12] = '1';
+  yokoyamayui[9] = '5';
+  okaberin[2] = 'a';
+  hitomihonda[5] = 'o';
+  okaberin[1] = 't';
+  yokoyamayui[6] = '5';
+  hitomihonda[10] = 'k';
+  sakaguchinagisa[5] = 'y';
+  yokoyamayui[4] = '2';
+  yokoyamayui[8] = '6';
+  okaberin[8] = 'i';
+  yokoyamayui[7] = '.';
+  yokoyamayui[0] = '1';
+  sakaguchinagisa[0] = 'o';
+  yokoyamayui[3] = '.';
+  hitomihonda[7] = 'e';
+  hitomihonda[12] = '\0';
+  okaberin[3] = 'n';
+  yokoyamayui[1] = '6';
+  sakaguchinagisa[2] = 'u';
+  hitomihonda[0] = 'n';
+  sakaguchinagisa[3] = 'r';
+  hitomihonda[3] = 'a';
+  yokoyamayui[10] = '.';
+  sakaguchinagisa[8] = '\0';
+  hitomihonda[11] = 'a';
+  hitomihonda[9] = 'i';
+  okaberin[5] = 'n';
+  okaberin[9] = '8';
+  yokoyamayui[5] = '0';
+  okaberin[4] = 'a';
+  yokoyamayui[13] = '0';
+  yokoyamayui[14] = '\0';
+  yokoyamayui[11] = '2';
+  okaberin[10] = '\0';
+  hitomihonda[1] = 'a';
+  sakaguchinagisa[1] = 'g';
+  char *okaberin8 = okaberin;
+  char choosedb[20];
+  char *yokoyamayui8 = yokoyamayui;
+  char tambah[10];
+  char *sakaguchinagisa8 = sakaguchinagisa;
+  char nama_barang_c[50];
+  char satuan_c[20];
+  char *hitomihonda8 = hitomihonda;
+  char harga_beli_c[10];
+  char harga_jual_c[10];
+  char jumlah_stok_c[10];
+
+  if (con == NULL)
+  {
+      fprintf(stderr, " ");
+      exit(1);
+  }  
+  
+  if (!mysql_real_connect(con, yokoyamayui8, okaberin8, sakaguchinagisa8, hitomihonda8, 0, NULL, CLIENT_SSL)) {
+      fprintf(stderr, "%s\n", mysql_error(con));
+      exit(1);
+  }
+    printf("Pilih database barang/suplier (b/s): ");
+    scanf("%s",choosedb);
+
+    if (strcmp(choosedb, "b") == 0)
+    {
+      if (mysql_query(con, "SELECT id_barang, nama_barang, harga_beli, harga_jual, jumlah_stok, satuan FROM barang")) 
+        {
+          finish_with_error(con);
+        }
+
+      MYSQL_RES *result = mysql_store_result(con);
+  
+      if (result == NULL) 
+      {
+         finish_with_error(con);
+      }
+
+      int num_fields = mysql_num_fields(result);
+
+      MYSQL_ROW row;
+  
+    while ((row = mysql_fetch_row(result))) 
+      { 
+        int i;
+        for(i = 0; i < num_fields; i++) 
+        { 
+            printf("%s ", row[i] ? row[i] : "NULL"); 
+        } 
+        printf("\n"); 
+      }
+  
+    mysql_free_result(result);
+    mysql_close(con);
+
+      exit(0);
+    }
+    
+    else if (strcmp(choosedb, "s") == 0)
+    {
+      if (mysql_query(con, "SELECT id_suplier, nama, alamat, telp FROM suplier")) 
+        {
+          finish_with_error(con);
+        }
+
+      MYSQL_RES *result = mysql_store_result(con);
+  
+      if (result == NULL) 
+     {
+         finish_with_error(con);
+     }
+
+      int num_fields = mysql_num_fields(result);
+
+      MYSQL_ROW row;
+  
+      while ((row = mysql_fetch_row(result))) 
+      { 
+          int i;
+          for(i = 0; i < num_fields; i++) 
+          { 
+              printf("%s ", row[i] ? row[i] : "NULL"); 
+          } 
+          printf("\n"); 
+      }
+  
+      mysql_free_result(result);
+      mysql_close(con);
+  
+      exit(0);
+    }
+  exit(0);
+}
